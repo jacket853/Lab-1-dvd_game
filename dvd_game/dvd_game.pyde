@@ -1,33 +1,55 @@
-RAD = 30
 
-XSPEED = 4
-YSPEED = 3
 
-xpos = 0.0
-ypos = 0.0
-
-xdir = -1
-ydir = -1
+XSIZE = 600
+YSIZE = 500
+FRAMERATE = 30
 
 def setup():
-    global RAD, XSPEED, YSPEED, xpos, ypos, xdir, ydir
-    size(600, 500)
-    frameRate(60)
-    ellipseMode(RADIUS) # default mode is ellipseMode(CENTER)
-    
-    xpos = width/2
-    ypos = height/2
-    
+    size(XSIZE, YSIZE)
+    noStroke()
+    frameRate(FRAMERATE)
+    ellipseMode(RADIUS)
+    xside = Edge(XSIZE)
+    yside = Edge(YSIZE)
 
 def draw():
-    global RAD, XSPEED, YSPEED, xpos, ypos, xdir, ydir
-    xpos = xpos+(XSPEED*xdir)
-    ypos = ypos+(YSPEED*ydir)
-    
-    if (xpos > width-RAD) or (xpos < RAD):
-        xdir *= -1
-    if (ypos > height-RAD) or (ypos < RAD):
-        ydir *= -1
+    background(0,0,0)
+    disk = Dvd(30, xside.x/2, yside.y/2, 4, 3, -1, -1)
+    disk.checkEdge()
+    disk.drawDisk()
+
+class Edge(object):
+    # the edge of the screen, used to define rebound, starting point, etc.
+    def __init__(self, x=None, y=None):
+        # x and y are optional, if one is not put in, then the other is None/default value
+        if x is None and y is None:
+            raise ValueError("Can't create Edge instance with no coordinate given.  Provide either an x or a y coordinate.")
+        if x is not None and y is not None:
+            raise ValueError("Can't create Edge instance with both coordinate given.  Provide either an x or a y coordinate.")
         
-    fill(204, 102, 0)
-    ellipse(xpos, ypos, RAD, RAD)
+        self.x = x
+        self.y = y
+
+class Dvd(object):
+    def __init__(self, rad, xpos, ypos, xspeed, yspeed, xdir, ydir):
+        self.rad = rad
+        self.xpos = xpos
+        self.ypos = ypos
+        self.xspeed = xspeed
+        self.yspeed = yspeed
+        self.xdir = xdir
+        self.ydir = ydir
+    
+    def drawDisk(self):
+        # update position based on checkEdge() method
+        self.xpos = self.xpos+(self.xspeed*self.xdir)
+        self.ypos = self.ypos+(self.yspeed*self.ydir)
+        
+        fill(204, 102, 0)
+        ellipse(self.xpos, self.ypos, self.rad)
+    
+    def checkEdge(self):
+        if (self.xpos > XSIZE-self.rad) or (self.xpos < selfrad):
+            self.xdir *= -1
+        if (self.ypos > YSIZE-self.rad) or (self.ypos < self.rad):
+            self.ydir *= -1
